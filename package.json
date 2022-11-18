@@ -11,16 +11,23 @@
   "dependencies": {
     "@tanstack/react-query": "^4.14.5",
     "@tanstack/react-virtual": "3.0.0-beta.23",
+    "@types/react-window": "^1.8.5",
     "axios": "^1.1.3",
+    "install": "^0.13.0",
     "react": "^18.2.0",
+    "react-cool-virtual": "^0.7.0",
     "react-dom": "^18.2.0",
     "react-infinite-scroll-component": "^6.1.0",
     "react-infinite-scroll-hook": "^4.0.4",
-    "react-infinite-scroller": "^1.2.6"
+    "react-infinite-scroller": "^1.2.6",
+    "react-simple-infinite-loading": "^1.1.0",
+    "react-virtuoso": "^3.1.4",
+    "react-window": "^1.8.8"
   },
   "devDependencies": {
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
+    "@types/react-infinite-scroller": "^1.2.3",
     "@vitejs/plugin-react": "^2.2.0",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.18",

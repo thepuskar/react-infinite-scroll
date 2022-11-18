@@ -1,11 +1,7 @@
 import axios, { AxiosInstance } from 'axios'
 
-// import { API_VERSION } from '@/constants';
-// import { appConfig } from '@/config';
-// import { authHeader } from '@/services';
-
-const baseURL = 'https://api.hamrobazaar.com'
-const apiKey = '09BECB8F84BCB7A1796AB12B98C1FB9E'
+const baseURL = import.meta.env.VITE_API_URL || 'localhost:5001'
+const apiKey = import.meta.env.VITE_API_KEY || 'some_random_key'
 
 export const axiosInstance = () => {
   const headers = {

@@ -1,16 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 
 import { getApi } from 'utils'
 import { IProduct } from 'interface'
+import { PRODUCT_URL } from 'constants'
 
 export const useGetInfiniteProducts = () => {
   const [products, setProducts] = useState<IProduct[]>()
 
   const fetchProducts = async (pageParam = 1) => {
-    return await getApi(
-      `/api/Product?PageSize=10&PageNumber=${pageParam}&CategoryId=5fa56149-98ce-4b22-a924-02565101631a`
-    )
+    return await getApi(`${PRODUCT_URL}?PageSize=10&PageNumber=${pageParam}`)
   }
 
   const {
@@ -26,7 +25,7 @@ export const useGetInfiniteProducts = () => {
     {
       getNextPageParam: (lastPage: any, pages: any) => {
         const totalRecords = pages[0]?.data?.totalPages || pages[0]?.totalPages
-        console.log('totalRecords: ', totalRecords)
+
         if (lastPage?.data) {
           if (pages?.length === totalRecords) return undefined
           return pages?.length + 1
