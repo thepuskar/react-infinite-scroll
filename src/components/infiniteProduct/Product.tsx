@@ -1,6 +1,5 @@
-import InfiniteScroll from 'react-infinite-scroller'
 import { useGetInfiniteProducts } from 'hooks'
-import { CardSkeleton, RenderIfVisible } from 'components'
+import { CardSkeleton, RenderIfVisible, InfiniteScroll } from 'components'
 import { Virtuoso } from 'react-virtuoso'
 
 export const Product = () => {
@@ -12,37 +11,35 @@ export const Product = () => {
       {isLoading ? (
         <CardSkeleton />
       ) : (
-        <Virtuoso
-          useWindowScroll
-          style={{ width: '100%' }}
-          data={products}
-          endReached={() => (hasNextPage ? fetchNextPage() : false)}
-          overscan={200}
-          itemContent={(index, data) => {
-            return (
-              <div>
-                <RenderIfVisible initialVisible={true} stayRendered={true}>
-                  <div className='m-4 flex flex-col items-center bg-white border rounded-lg shadow-md md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700'>
-                    <img
-                      className='object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg'
-                      src={data?.imageUrl}
-                      alt=''
-                    />
-                    <div className='flex flex-col justify-between p-4 leading-normal'>
-                      <h5 className='mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white'>
-                        {data?.name}
-                      </h5>
-                      <p className='mb-3 font-normal text-gray-700 dark:text-gray-400'>
-                        {data?.description}
-                      </p>
-                    </div>
-                  </div>
-                </RenderIfVisible>
+        <InfiniteScroll
+          onLoadMore={fetchNextPage}
+          hasMore={hasNextPage}
+          loading={<Footer />}
+        >
+          {products?.map((data) => (
+            <RenderIfVisible
+              initialVisible={true}
+              stayRendered={true}
+              key={data?.id}
+            >
+              <div className='m-4 flex flex-col items-center bg-white border rounded-lg shadow-md md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700'>
+                <img
+                  className='object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg'
+                  src={data?.imageUrl}
+                  alt=''
+                />
+                <div className='flex flex-col justify-between p-4 leading-normal'>
+                  <h5 className='mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white'>
+                    {data?.name}
+                  </h5>
+                  <p className='mb-3 font-normal text-gray-700 dark:text-gray-400'>
+                    {data?.description}
+                  </p>
+                </div>
               </div>
-            )
-          }}
-          components={{ Footer }}
-        />
+            </RenderIfVisible>
+          ))}
+        </InfiniteScroll>
       )}
     </div>
   )
