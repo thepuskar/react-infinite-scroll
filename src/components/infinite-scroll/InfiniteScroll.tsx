@@ -1,43 +1,85 @@
-import { ReactNode, useEffect, useRef, useMemo, useCallback } from 'react'
+import {
+  ReactNode,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+  useState
+} from 'react'
 import { debounce } from 'utils'
 
-interface IInfiniteScroll {
+interface IInfiniteScrollProps {
   children: ReactNode
   onLoadMore: () => void
   hasMore: boolean | undefined
-  threshold?: number
+  threshold?: number | number[]
   style?: object
-  loading?: ReactNode
+  loading: ReactNode
   debounce?: number
   className?: string
 }
 
-export const InfiniteScroll = (props: IInfiniteScroll) => {
+const defaultProps = {
+  onLoadMore: () => {},
+  hasMore: false,
+  style: {},
+  loading: <p>Loading...</p>,
+  debounce: 10,
+  className: ''
+}
+
+export const InfiniteScroll = (userProps: IInfiniteScrollProps) => {
+  const props = { ...defaultProps, ...userProps }
+  const [isLoading, setIsLoading] = useState(false)
+  const [isFastScrolling, setIsFastScrolling] = useState(false)
   const rootSentinelRef = useRef<HTMLDivElement | null>(null)
-  const targetSentinelRef = useRef<any>()
-  const hasMoreRef = useRef(props?.hasMore)
-  const onLoadMoreRef = useRef(props?.onLoadMore)
-  const loadingRef = useRef(props?.loading || <p>Loading...</p>)
+  const targetSentinelRef = useRef()
+  const hasMoreRef = useRef(props.hasMore)
+  const onLoadMoreRef = useRef(props.onLoadMore)
+  const loadingRef = useRef(props.loading)
 
   /* Debouncing the onLoadMore function. */
   const debouncedOnLoadMore = debounce(() => {
-    if (onLoadMoreRef?.current) onLoadMoreRef?.current()
-  }, props?.debounce || 500) // debounce for 500 milliseconds
+    if (onLoadMoreRef.current) {
+      onLoadMoreRef.current()
+      setIsLoading(false)
+    }
+  }, props?.debounce)
+
+  useEffect(() => {
+    if (rootSentinelRef.current) {
+      // Add event listener for scroll event
+      rootSentinelRef.current!.addEventListener('scroll', handleScroll)
+      return () => {
+        // Remove event listener when component unmounts
+        rootSentinelRef.current!.removeEventListener('scroll', handleScroll)
+      }
+    }
+  }, [])
+
+  const handleScroll = () => {
+    // Set isFastScrolling to true if user scrolls quickly
+    setIsFastScrolling(true)
+    // Debounce setting isFastScrolling back to false
+    debounce(() => setIsFastScrolling(false), props.debounce)
+  }
 
   const observer = useMemo(() => {
     return new IntersectionObserver(
       async ([entry]) => {
-        if (entry?.isIntersecting && hasMoreRef?.current) {
+        if (entry.isIntersecting && hasMoreRef.current) {
+          setIsLoading(true)
           debouncedOnLoadMore()
         }
       },
       {
-        root: rootSentinelRef?.current,
-        rootMargin: getMargin(rootSentinelRef?.current),
-        threshold: props?.threshold
+        root: rootSentinelRef.current,
+        rootMargin: getMargin(rootSentinelRef.current),
+        threshold: props.threshold
       }
     )
-  }, [props?.threshold, hasMoreRef, onLoadMoreRef])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.threshold, hasMoreRef, onLoadMoreRef])
 
   const observe = useCallback(
     (node: any) => {
@@ -68,9 +110,8 @@ export const InfiniteScroll = (props: IInfiniteScroll) => {
       }}
       className={props?.className}
     >
-      {props?.children}
-      {hasMoreRef?.current ? loadingRef?.current : null}
-      <span ref={(node) => observe(node)} />
+      {props.children}
+      {isLoading ? loadingRef?.current : <span ref={(node) => observe(node)} />}
     </div>
   )
 }

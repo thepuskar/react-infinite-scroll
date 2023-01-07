@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@tanstack/react-query': ^4.14.5
   '@tanstack/react-virtual': 3.0.0-beta.23
+  '@types/lodash': ^4.14.191
   '@types/react': ^18.0.24
   '@types/react-dom': ^18.0.8
   '@types/react-infinite-scroller': ^1.2.3
@@ -43,6 +44,7 @@ dependencies:
   react-window: 1.8.8_biqbaboplfbrettd7655fr4n2y
 
 devDependencies:
+  '@types/lodash': 4.14.191
   '@types/react': 18.0.25
   '@types/react-dom': 18.0.8
   '@types/react-infinite-scroller': 1.2.3
@@ -447,6 +449,10 @@ packages:
     resolution: {integrity: sha512-xQfJgz4mdaxifPjOqUBYAar60UAQTrED2SpS0VI5AZvxYI4NDTxx5cFrjaP4baKY3UnVc8IsGFbqr8Q/LZNMag==}
     engines: {node: '>=12'}
     dev: false
+
+  /@types/lodash/4.14.191:
+    resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
+    dev: true
 
   /@types/prop-types/15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
